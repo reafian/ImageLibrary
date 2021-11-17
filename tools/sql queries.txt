@@ -1,0 +1,39 @@
+Artists
+grep '<key>Album Artist' Library.xml | cut -d\> -f4- | cut -d\< -f1 | sed -e"s/^The //" | sed -e's/#38;//' | sort -u | while read list
+do
+  echo "insert into artists (artist_name) values (\"$list\");"
+done > artists.sql
+
+.read artists.sql
+
+Albums
+grep 'key>Album Artist' Library.xml | sort -u | while read list
+do
+  artist=$(echo $list | cut -d\> -f4 | cut -d\< -f1 | sed -e"s/^The //" | sed -e's/#38;//')
+  grep -A10 "$list" Library.xml | grep 'key>Album<' | sort -u | while read list
+  do
+    album=$(echo $list | cut -d\> -f4 | cut -d\< -f1)
+    if echo $album | grep -q '"'
+    then
+      echo "insert into albums (artist_id, album_name) values ((select artist_id from artists where artist_name = \"$artist\"),'$album');"
+    else
+      echo "insert into albums (artist_id, album_name) values ((select artist_id from artists where artist_name = \"$artist\"),\"$album\");"
+    fi
+  done
+done > albums.sql
+
+.read albums.sql
+
+Sizes
+for i in 500 600 1000
+do
+  echo "insert into sizes (size) values (\"$i\");"
+done > sizes.sql
+
+.read sizes.sql
+
+Images
+
+base64 encode image first
+insert into images (album_id, size_id, image) values ((select album_id from albums inner join artists on albums.artist_id = artists.artist_id where artist_name = "ABBA" and album_name = "GOLD"),(select size_id from sizes where size = "500"),"b64_Gold 500x500.jpg");
+Insert image as blob object
