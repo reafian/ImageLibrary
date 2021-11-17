@@ -15,3 +15,10 @@ This is the stuff that's in this repo.
 ## Tools 
 
 1. catalogue.sh - a small script to catalogue the iTunes / Music library and create a structure to hold the images. I could hold them in the database but I think I'll start 'simple' for the moment. The source needs to be the exported iTunes Library.xml file. Just set the apropriate variables at the top and the image structure should be created in the desired location.
+
+
+## Testing
+
+This is my little testing area to figure out how stuff works. It's meant to be throwaway but hopefully it will help build something better.
+
+1. image_resize.py - a small script that takes an argument and resizes images to the sizes needed.
